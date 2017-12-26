@@ -34,6 +34,13 @@ Architecture: $version_arch
 Depends: 
 Maintainer: Alban Vidal <alban.vidal@zordhak.fr>
 Description: DNS Performance Testing Tools
+ This is a collection of DNS server performance testing tools, including
+ dnsperf and resperf. For more information, see the dnsperf(1) and resperf(1)
+ man pages.
+ .
+ Usage:
+ dnsperf and resperf read input files describing DNS queries, and send those
+ queries to DNS servers to measure performance.
 EOF
 
 ################################################################################
