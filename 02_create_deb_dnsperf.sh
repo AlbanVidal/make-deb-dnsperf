@@ -24,25 +24,6 @@ mkdir -p /opt/deb/$VERSION/DEBIAN
 mkdir -p /opt/deb/$VERSION/usr/bin
 mkdir -p /opt/deb/$VERSION/usr/share/man/man1/
 
-# Fichier Debian control
-cat << EOF > /opt/deb/$VERSION/DEBIAN/control
-Package: dnsperf
-Version: $version_majeur-$version_mineur
-Section: admin
-Priority: optional
-Architecture: $version_arch
-Depends: 
-Maintainer: Alban Vidal <alban.vidal@zordhak.fr>
-Description: DNS Performance Testing Tools
- This is a collection of DNS server performance testing tools, including
- dnsperf and resperf. For more information, see the dnsperf(1) and resperf(1)
- man pages.
- .
- Usage:
- dnsperf and resperf read input files describing DNS queries, and send those
- queries to DNS servers to measure performance.
-EOF
-
 ################################################################################
 # Copie des fichiers
 cd /opt/dnsperf-src/dnsperf
@@ -58,6 +39,36 @@ ln -s resperf.1.gz /opt/deb/$VERSION/usr/share/man/man1/resperf-report.1.gz
 # --no-name => to supress package-contains-timestamped-gzip
 gzip --best --no-name /opt/deb/$VERSION/usr/share/man/man1/dnsperf.1
 gzip --best --no-name /opt/deb/$VERSION/usr/share/man/man1/resperf.1
+
+# Generate md5sum for each file
+
+# Calcul Installed-Size - see https://www.debian.org/doc/debian-policy/#s-f-installed-size
+totalSize=$(du -s --exclude=DEBIAN /opt/deb/$VERSION|awk '{print $1}')
+installedSize=$(( totalSize / 1024 ))
+(( installedSize ++ ))
+
+# Debian control
+cat << EOF > /opt/deb/$VERSION/DEBIAN/control
+Package: dnsperf
+Version: $version_majeur-$version_mineur
+Section: admin
+Priority: optional
+Architecture: $version_arch
+Installed-Size: $installedSize
+Depends: 
+Maintainer: Alban Vidal <alban.vidal@zordhak.fr>
+Homepage: https://github.com/nominum/dnsperf
+Description: DNS Performance Testing Tools
+ This is a collection of DNS server performance testing tools, including
+ dnsperf and resperf. For more information, see the dnsperf(1) and resperf(1)
+ man pages.
+ .
+ Usage:
+ dnsperf and resperf read input files describing DNS queries, and send those
+ queries to DNS servers to measure performance.
+EOF
+
+
 
 ################################################################################
 # Création du fichier .deb
