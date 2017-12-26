@@ -1,7 +1,10 @@
 #!/bin/bash
 
+BASE_DIR="/opt/deb"
+SOURCE_DIR="/opt/dnsperf-src/dnsperf"
+
 # Search the actual version number in source file
-version_majeur=$(grep 'VERSION "' /opt/dnsperf-src/dnsperf/version.h|awk '{print $3}'|sed 's/"//g')
+version_majeur=$(grep 'VERSION "' ${SOURCE_DIR}/version.h|awk '{print $3}'|sed 's/"//g')
 
 # année mois jour heure
 #version_mineur=$(date +%Y%m%d.%H)
@@ -13,23 +16,23 @@ VERSION="dnsperf-${version_majeur}-${version_mineur}_${version_arch}"
 
 # Si le répertoire existe déjà on supprime
 # If directory exist, will be delete it
-if [ -d /opt/deb/$VERSION/ ]
+if [ -d ${BASE_DIR}/$VERSION/ ]
 then
     echo "Le répertoire existe déjà, on le supprime"
-    rm -rf /opt/deb/$VERSION/
+    rm -rf ${BASE_DIR}/$VERSION/
 fi
 
 # Création des répertoires
-mkdir -p /opt/deb/$VERSION/DEBIAN
+mkdir -p ${BASE_DIR}/$VERSION/DEBIAN
 # binary dir
-mkdir -p /opt/deb/$VERSION/usr/bin
+mkdir -p ${BASE_DIR}/$VERSION/usr/bin
 # man dir
-mkdir -p /opt/deb/$VERSION/usr/share/man/man1/
+mkdir -p ${BASE_DIR}/$VERSION/usr/share/man/man1/
 # doc dir
-mkdir -p /opt/deb/$VERSION/usr/share/doc/dnsperf
+mkdir -p ${BASE_DIR}/$VERSION/usr/share/doc/dnsperf
 
 # Copyright file
-cat << EOF > /opt/deb/$VERSION/usr/share/doc/dnsperf/copyright
+cat << EOF > ${BASE_DIR}/$VERSION/usr/share/doc/dnsperf/copyright
 This is the Debian GNU/Linux prepackaged version of dnsperf
 
 dnsperf - DNS Performance Testing Tools - Apache License Version 2.0
@@ -53,43 +56,43 @@ The Debian packaging is
 EOF
 
 # Changelog file
-cat << EOF > /opt/deb/$VERSION/usr/share/doc/dnsperf/changelog
-dnsperf (2.1.1.0.d-1) 
+cat << EOF > ${BASE_DIR}/$VERSION/usr/share/doc/dnsperf/changelog
+dnsperf (2.1.1.0.d-1) stretch; urgency=low
 
-  * Initial creation of Debian package for dnsperf
+  * Initial Release of Debian package for dnsperf
 
--- Alban Vidal <alban.vidal@zordhak.fr> 
+ -- Alban Vidal <alban.vidal@zordhak.fr>  $(LANG=en_US date "+%a, %d %b %Y %R:%S %z")
 EOF
 # compress changelog file
-gzip --best --no-name /opt/deb/$VERSION/usr/share/doc/dnsperf/changelog
+gzip --best --no-name ${BASE_DIR}/$VERSION/usr/share/doc/dnsperf/changelog
 
 ################################################################################
 # Copie des fichiers
-cd /opt/dnsperf-src/dnsperf
-/usr/bin/install -c  dnsperf /opt/deb/$VERSION/usr/bin
-/usr/bin/install -c  resperf /opt/deb/$VERSION/usr/bin
-/usr/bin/install -c  resperf-report /opt/deb/$VERSION/usr/bin
-/usr/bin/install -c -m 644  dnsperf.1 /opt/deb/$VERSION/usr/share/man/man1
-/usr/bin/install -c -m 644  resperf.1 /opt/deb/$VERSION/usr/share/man/man1
+cd $SOURCE_DIR
+/usr/bin/install -c  dnsperf ${BASE_DIR}/$VERSION/usr/bin
+/usr/bin/install -c  resperf ${BASE_DIR}/$VERSION/usr/bin
+/usr/bin/install -c  resperf-report ${BASE_DIR}/$VERSION/usr/bin
+/usr/bin/install -c -m 644  dnsperf.1 ${BASE_DIR}/$VERSION/usr/share/man/man1
+/usr/bin/install -c -m 644  resperf.1 ${BASE_DIR}/$VERSION/usr/share/man/man1
 # Create symbolic link for resperf-report to resperf
-ln -s resperf.1.gz /opt/deb/$VERSION/usr/share/man/man1/resperf-report.1.gz
+ln -s resperf.1.gz ${BASE_DIR}/$VERSION/usr/share/man/man1/resperf-report.1.gz
 # Compress manpages
 # --best => best compression (level 9)
 # --no-name => to supress package-contains-timestamped-gzip
-gzip --best --no-name /opt/deb/$VERSION/usr/share/man/man1/dnsperf.1
-gzip --best --no-name /opt/deb/$VERSION/usr/share/man/man1/resperf.1
+gzip --best --no-name ${BASE_DIR}/$VERSION/usr/share/man/man1/dnsperf.1
+gzip --best --no-name ${BASE_DIR}/$VERSION/usr/share/man/man1/resperf.1
 
 # Generate md5sum for each file
-cd /opt/deb/$VERSION/
+cd ${BASE_DIR}/$VERSION/
 find . -type f ! -regex '.*.hg.*' ! -regex '.*?debian-binary.*' ! -regex '.*?DEBIAN.*' -printf '%P ' | xargs md5sum > DEBIAN/md5sums
 
 # Calcul Installed-Size - see https://www.debian.org/doc/debian-policy/#s-f-installed-size
-totalSize=$(du -s --exclude=DEBIAN /opt/deb/$VERSION|awk '{print $1}')
+totalSize=$(du -s --exclude=DEBIAN ${BASE_DIR}/$VERSION|awk '{print $1}')
 installedSize=$(( totalSize / 1024 ))
 (( installedSize ++ ))
 
 # Debian control
-cat << EOF > /opt/deb/$VERSION/DEBIAN/control
+cat << EOF > ${BASE_DIR}/$VERSION/DEBIAN/control
 Package: dnsperf
 Version: $version_majeur-$version_mineur
 Section: admin
@@ -113,6 +116,6 @@ EOF
 
 ################################################################################
 # Création du fichier .deb
-cd /opt/deb/
+cd ${BASE_DIR}
 dpkg-deb --build $VERSION
 
