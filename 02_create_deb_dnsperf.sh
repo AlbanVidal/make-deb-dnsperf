@@ -28,7 +28,7 @@ mkdir -p /opt/deb/$VERSION/usr/share/man/man1/
 cat << EOF > /opt/deb/$VERSION/DEBIAN/control
 Package: dnsperf
 Version: $version_majeur-$version_mineur
-Section: base
+Section: admin
 Priority: optional
 Architecture: $version_arch
 Depends: 
