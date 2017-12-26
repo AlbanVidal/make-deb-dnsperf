@@ -44,6 +44,8 @@ cd /opt/dnsperf-src/dnsperf
 /usr/bin/install -c  resperf-report /opt/deb/$VERSION/usr/bin
 /usr/bin/install -c -m 644  dnsperf.1 /opt/deb/$VERSION/usr/share/man/man1
 /usr/bin/install -c -m 644  resperf.1 /opt/deb/$VERSION/usr/share/man/man1
+# Create symbolic link for resperf-report to resperf
+ln -s resperf.1.gz /opt/deb/$VERSION/usr/share/man/man1/resperf-report.1.gz
 # Compress manpages
 # --best => best compression (level 9)
 # --no-name => to supress package-contains-timestamped-gzip
