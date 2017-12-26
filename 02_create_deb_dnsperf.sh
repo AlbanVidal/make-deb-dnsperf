@@ -21,8 +21,8 @@ fi
 # Création des répertoires
 mkdir -p /opt/deb/$VERSION/DEBIAN
 # Création des sous-répertoires
-mkdir -p /opt/deb/$VERSION/usr/local/bin
-mkdir -p /opt/deb/$VERSION/usr/local/share/man/man1/
+mkdir -p /opt/deb/$VERSION/usr/bin
+mkdir -p /opt/deb/$VERSION/usr/share/man/man1/
 
 # Fichier Debian control
 cat << EOF > /opt/deb/$VERSION/DEBIAN/control
@@ -39,11 +39,11 @@ EOF
 ################################################################################
 # Copie des fichiers
 cd /opt/dnsperf-src/dnsperf
-/usr/bin/install -c  dnsperf /opt/deb/$VERSION/usr/local/bin
-/usr/bin/install -c  resperf /opt/deb/$VERSION/usr/local/bin
-/usr/bin/install -c  resperf-report /opt/deb/$VERSION/usr/local/bin
-/usr/bin/install -c -m 644  dnsperf.1 /opt/deb/$VERSION/usr/local/share/man/man1
-/usr/bin/install -c -m 644  resperf.1 /opt/deb/$VERSION/usr/local/share/man/man1
+/usr/bin/install -c  dnsperf /opt/deb/$VERSION/usr/bin
+/usr/bin/install -c  resperf /opt/deb/$VERSION/usr/bin
+/usr/bin/install -c  resperf-report /opt/deb/$VERSION/usr/bin
+/usr/bin/install -c -m 644  dnsperf.1 /opt/deb/$VERSION/usr/share/man/man1
+/usr/bin/install -c -m 644  resperf.1 /opt/deb/$VERSION/usr/share/man/man1
 
 ################################################################################
 # Création du fichier .deb
