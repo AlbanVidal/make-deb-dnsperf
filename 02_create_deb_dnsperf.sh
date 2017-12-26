@@ -4,11 +4,12 @@
 version_majeur=$(grep 'VERSION "' /opt/dnsperf-src/dnsperf/version.h|awk '{print $3}'|sed 's/"//g')
 
 # année mois jour heure
-version_mineur=$(date +%Y%m%d.%H)
+#version_mineur=$(date +%Y%m%d.%H)
+version_mineur=1
 #
 version_arch=$(dpkg --print-architecture)
 #
-VERSION="dnsperf-${version_majeur}-${version_mineur}-${version_arch}"
+VERSION="dnsperf-${version_majeur}-${version_mineur}_${version_arch}"
 
 # Si le répertoire existe déjà on supprime
 # If directory exist, will be delete it
@@ -20,9 +21,47 @@ fi
 
 # Création des répertoires
 mkdir -p /opt/deb/$VERSION/DEBIAN
-# Création des sous-répertoires
+# binary dir
 mkdir -p /opt/deb/$VERSION/usr/bin
+# man dir
 mkdir -p /opt/deb/$VERSION/usr/share/man/man1/
+# doc dir
+mkdir -p /opt/deb/$VERSION/usr/share/doc/dnsperf
+
+# Copyright file
+cat << EOF > /opt/deb/$VERSION/usr/share/doc/dnsperf/copyright
+This is the Debian GNU/Linux prepackaged version of dnsperf
+
+dnsperf - DNS Performance Testing Tools - Apache License Version 2.0
+
+This package is maintained for Debian by Alban VIDAL <alban.vidal@zordhak.fr>,
+and was built from the sources found at:
+
+    https://github.com/nominum/dnsperf
+
+Official website of nominum:
+
+    https://www.nominum.com/
+    https://www.nominum.com/measurement-tools/
+
+On Debian GNU/Linux systems, the complete text of the Apache License
+Version 2.0 can be found in /usr/share/common-licenses/Apache-2.0.
+
+The Debian packaging is
+
+    Copyright (C) 2017 Alban VIDAL <alban.vidal@zordhak.fr>.
+EOF
+
+# Changelog file
+cat << EOF > /opt/deb/$VERSION/usr/share/doc/dnsperf/changelog
+dnsperf (2.1.1.0.d-1) 
+
+  * Initial creation of Debian package for dnsperf
+
+-- Alban Vidal <alban.vidal@zordhak.fr> 
+EOF
+# compress changelog file
+gzip --best --no-name /opt/deb/$VERSION/usr/share/doc/dnsperf/changelog
 
 ################################################################################
 # Copie des fichiers
@@ -41,6 +80,8 @@ gzip --best --no-name /opt/deb/$VERSION/usr/share/man/man1/dnsperf.1
 gzip --best --no-name /opt/deb/$VERSION/usr/share/man/man1/resperf.1
 
 # Generate md5sum for each file
+cd /opt/deb/$VERSION/
+find . -type f ! -regex '.*.hg.*' ! -regex '.*?debian-binary.*' ! -regex '.*?DEBIAN.*' -printf '%P ' | xargs md5sum > DEBIAN/md5sums
 
 # Calcul Installed-Size - see https://www.debian.org/doc/debian-policy/#s-f-installed-size
 totalSize=$(du -s --exclude=DEBIAN /opt/deb/$VERSION|awk '{print $1}')
