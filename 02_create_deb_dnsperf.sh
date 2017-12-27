@@ -106,7 +106,7 @@ Section: admin
 Priority: optional
 Architecture: $version_arch
 Installed-Size: $installedSize
-Depends: 
+Depends: libbind9-140, libssl1.1, libc6
 Maintainer: Alban Vidal <alban.vidal@zordhak.fr>
 Homepage: https://github.com/nominum/dnsperf
 Description: DNS Performance Testing Tools
