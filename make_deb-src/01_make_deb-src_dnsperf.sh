@@ -16,7 +16,7 @@ apt -y install devscripts git
 ################################################################################
 ####                              EDIT THIS VARS                            ####
 
-TEMPLATE_DIR="${HOME}/make_deb-src_dnsperf"
+TEMPLATE_DIR="${HOME}/make-deb-dnsperf/make_deb-src"
 
 DIR_SRC="/usr/local/src/deb-src/"
 
