@@ -1,0 +1,5 @@
+dnsperf (2.1.1.0-1) UNRELEASED; urgency=low
+
+  * Initial release. (Closes: #XXXXXX)
+
+ -- Alban Vidal <alban.vidal@zordhak.fr>  Wed, 27 Dec 2017 14:52:46 +0100

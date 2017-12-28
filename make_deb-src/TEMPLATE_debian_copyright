@@ -1,0 +1,21 @@
+This is the Debian GNU/Linux prepackaged version of dnsperf
+
+dnsperf - DNS Performance Testing Tools - Apache License Version 2.0
+
+This package is maintained for Debian by Alban VIDAL <alban.vidal@zordhak.fr>,
+and was built from the sources found at:
+
+    https://github.com/nominum/dnsperf
+
+Official website of nominum:
+
+    https://www.nominum.com/
+    https://www.nominum.com/measurement-tools/
+
+On Debian GNU/Linux systems, the complete text of the Apache License
+Version 2.0 can be found in /usr/share/common-licenses/Apache-2.0.
+
+The Debian packaging is
+
+    Copyright (C) 2017 Alban VIDAL <alban.vidal@zordhak.fr>.
+
